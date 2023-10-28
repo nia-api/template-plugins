@@ -4,7 +4,7 @@ import { Router } from 'express'
 // 实例化 Router 对象
 const router = Router()
 
-// 使用路由 （ 定义子路由路径 ）
+// 使用路由 （ 定义子路由路径 ） /template-plugins/helloWorld
 router.use('/helloWorld', async (req, res, next) =>
     (await import('./router/helloWorld')).default(req, res, next)
 )
@@ -14,7 +14,7 @@ router.use('/helloWorld', async (req, res, next) =>
 // router.use('/helloWorld', require('./router/helloWorld').default)
 
 // 导出路由插件简介名称说明 （ 仅用于显示方便辨认 ）
-export const Name = '示例模块'
+export const Name = '示例路由插件'
 
 // 导出默认路由
 export default router

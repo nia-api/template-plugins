@@ -13,6 +13,9 @@ template-plugins
  └─ helloWorld.ts
 └─ utils
  └─ getMsg.ts
+ └─ config.ts
+└─ template
+ └─ _config.yaml
 ```
 
 ### 接口说明
@@ -39,7 +42,7 @@ import { Router } from 'express'
 // 实例化 Router 对象
 const router = Router()
 
-// 使用路由 （ 定义子路由路径 ）
+// 使用路由 （ 定义子路由路径 ） /template-plugins/helloWorld
 router.use('/helloWorld', async (req, res, next) =>
     (await import('./router/helloWorld')).default(req, res, next)
 )
@@ -59,6 +62,7 @@ import { getMsg } from './../utils/getMsg'
 
 const router = Router()
 
+// path /template-plugins/helloWorld/sayHelloWorld
 router.get('/sayHelloWorld', (request, response) => {
     response.send(getMsg())
 })
@@ -69,10 +73,30 @@ export default router
 `getMsg.ts`
 
 ```typescript
+import { config } from './../utils/config'
+
 export const getMsg = () => {
-    return 'Hello World'
+    return config.str
 }
 ```
+
+`config.ts`
+
+```typescript
+import { useDataFile } from './../../../hooks/useDataFile'
+import yaml from 'yaml'
+import fs from 'fs'
+
+import type { Config } from './../types/config'
+
+const { getFile } = useDataFile('template-plugins')
+
+const defaultConfig = fs.readFileSync(__dirname + './../template/_config.yaml', 'utf-8')
+
+export const config = yaml.parse(getFile('./config.yaml', defaultConfig)) as Config
+```
+
+截至 2023.10.28 新数据文件钩子更新后，需使用 `useDataFile` 来与真实的物理文件进行互动，而不是直接调用 `config` 全局配置文件
 
 ### 路由使用说明
 

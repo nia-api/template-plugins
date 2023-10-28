@@ -1,3 +1,5 @@
+import { config } from './../utils/config'
+
 export const getMsg = () => {
-    return 'Hello World'
+    return config.str
 }
